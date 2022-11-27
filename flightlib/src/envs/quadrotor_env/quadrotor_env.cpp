@@ -48,6 +48,10 @@ QuadrotorEnv::~QuadrotorEnv() {}
 bool QuadrotorEnv::reset(Ref<Vector<>> obs, const bool random) {
   quad_state_.setZero();
   quad_act_.setZero();
+  // Set Z state to 5
+  quad_state_.x(QS::POSZ) = uniform_dist_(random_gen_) + 1;
+    if (quad_state_.x(QS::POSZ) < -0.0)
+      quad_state_.x(QS::POSZ) = -quad_state_.x(QS::POSZ);
 
   if (random) {
     // randomly reset the quadrotor state
@@ -73,7 +77,7 @@ bool QuadrotorEnv::reset(Ref<Vector<>> obs, const bool random) {
 
   // reset control command
   cmd_.t = 0.0;
-  cmd_.thrusts.setZero();
+  // cmd_.thrusts.setZero(); // In order to use collective thrust, it is set to NAN
 
   // obtain observations
   getObs(obs);
@@ -93,9 +97,15 @@ bool QuadrotorEnv::getObs(Ref<Vector<>> obs) {
 }
 
 Scalar QuadrotorEnv::step(const Ref<Vector<>> act, Ref<Vector<>> obs) {
-  quad_act_ = act.cwiseProduct(act_std_) + act_mean_;
+  // quad_act_ = act.cwiseProduct(act_std_) + act_mean_; // By Kurt
   cmd_.t += sim_dt_;
-  cmd_.thrusts = quad_act_;
+  // cmd_.thrusts = quad_act_; // By Kurt
+  
+  // Set Omega values to control
+  cmd_.omega(0) = act(0);
+  cmd_.omega(1) = act(1);
+  cmd_.omega(2) = act(2);
+  cmd_.collective_thrust = act(3);
 
   // simulate quadrotor
   quadrotor_ptr_->run(cmd_, sim_dt_);

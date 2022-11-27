@@ -1,4 +1,5 @@
 #include "flightlib/objects/quadrotor.hpp"
+#include <iostream>
 
 namespace flightlib {
 
@@ -112,7 +113,11 @@ Vector<4> Quadrotor::runFlightCtl(const Scalar sim_dt, const Vector<3> &omega,
 
   const Vector<4> motor_thrusts_des = B_allocation_inv_ * thrust_and_torque;
 
-  return dynamics_.clampThrust(motor_thrusts_des);
+  // Trim Thrust added
+  const Vector<4> motor_trim_thrust_ = {1.79, 1.79, 1.79, 1.79};
+  const Vector<4> motor_thrusts_ = motor_thrusts_des +  motor_trim_thrust_;
+
+  return dynamics_.clampThrust(motor_thrusts_);
 }
 
 void Quadrotor::runMotors(const Scalar sim_dt,
