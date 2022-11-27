@@ -1,0 +1,10 @@
+# BUILD flightlib
+- Change "GIT_TAG : master" with "GIT_TAG : main" in file "/home/kurt/Desktop/SWARMCO/flightmare_swarmCo/flightlib/cmake/gtest_download.cmake"
+- pip install -e .
+
+# ACTIVATE Conda
+- conda activate ENVNAME
+- cd Desktop/flightmare/flightswarm/
+- cd examples/
+- python3 swarm_control.py --train 0 --render 1
+
