@@ -1,20 +1,20 @@
-#!/usr/bin/env python3
-from cProfile import label
-from ruamel.yaml import YAML, dump, RoundTripDumper
-#
+# !/usr/bin/env python3
+
 import os
 import argparse
 import numpy as np
-#
+from ruamel.yaml import YAML, dump, RoundTripDumper
 from rpg_baselines.envs import vec_env_wrapper as wrapper
 from uav.UavClass import UavClass
-#
-from flightgym import QuadrotorEnv_v1
-# 
 import matplotlib.pyplot as plt
-import matplotlib.gridspec as gridspec
+from matplotlib import gridspec
+
+from flightgym import QuadrotorEnv_v1
 
 def parser():
+    """
+        Parser
+    """
     parser = argparse.ArgumentParser()
     parser.add_argument('--train', type=int, default=1,
                         help="To train new model or simply test pre-trained model")
@@ -29,12 +29,15 @@ def parser():
     return parser
 
 def main():
+    """
+        Main Quadcopter Script
+    """
     # Define Quadcopter Number
     uav_num = 1
 
     args = parser().parse_args()
     cfg = YAML().load(open(os.environ["FLIGHTMARE_PATH"] +
-                           "/flightlib/configs/vec_env.yaml", 'r'))
+                           "/flightlib/configs/vec_env.yaml", 'r', encoding="utf8"))
     if not args.train:
         cfg["env"]["num_envs"] = uav_num
         cfg["env"]["num_threads"] = 1
@@ -50,14 +53,14 @@ def main():
     if args.render:
         # Connect to Flightmare.
         env.connectUnity()
-    
+
     # Reset the quadrotor state and get observations.
     uav_states = env.reset()
 
     # UAV Initialization
     uav_list = []
-    for id in range(uav_num):
-        uav_list.append(UavClass(id))
+    for uav_id in range(uav_num):
+        uav_list.append(UavClass(uav_id))
 
     # Plot
     fig = plt.figure(figsize=(9, 6), tight_layout=True)
