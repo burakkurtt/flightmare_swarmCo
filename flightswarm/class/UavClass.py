@@ -8,18 +8,18 @@ class UavClass:
     """
     def __init__(self, uav_id):
         self.name = 'uav_' + str(uav_id)
-        self.pos_x = 0
-        self.pos_y = 0
-        self.pos_z = 0
-        self.orientation_x = 0
-        self.orientation_y = 0
-        self.orientation_z = 0
-        self.linear_vel_x = 0
-        self.linear_vel_y = 0
-        self.linear_vel_z = 0
-        self.angular_vel_x = 0
-        self.angular_vel_y = 0
-        self.angular_vel_z = 0
+        self.lin_pos_x = 0
+        self.lin_pos_y = 0
+        self.lin_pos_z = 0
+        self.ang_pos_x = 0
+        self.ang_pos_y = 0
+        self.ang_pos_z = 0
+        self.lin_vel_x = 0
+        self.lin_vel_y = 0
+        self.lin_vel_z = 0
+        self.ang_vel_x = 0
+        self.ang_vel_y = 0
+        self.ang_vel_z = 0
         # PID controller class init
         self.pid_phi = PID(0.0, 0.0, 0.0, setpoint=0.0)
         self.pid_theta = PID(0.0, 0.0, 0.0, setpoint=0.0)
